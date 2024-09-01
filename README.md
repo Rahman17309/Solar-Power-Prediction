@@ -1,5 +1,11 @@
 # Solar-Power-Prediction
 
+![Demo Video](https://waareeimages.s3.ap-south-1.amazonaws.com/Scope_of_Solar_Energy_in_India_8c53c636d2.png)
+
+## Demo Video
+
+[Watch the Demo Video](https://youtu.be/sFNEGxjOMiI?si=l29N0xLx2-k_Cp5z)
+
 ## Project Objective
 
 The objective of this project is to accurately predict solar power generation using historical weather and environmental data. By leveraging machine learning, specifically the Gradient Boosting algorithm, the project aims to provide reliable predictions of the power output from solar panels. This can be used to optimize energy production, plan resource allocation, and support decision-making in solar energy management.
@@ -34,4 +40,9 @@ To make the model accessible and easy to use, a web application was developed us
 - Visualization: The app includes visual elements to enhance the user experience, such as displaying relevant images and output results.
 - This deployment makes the model practical and accessible, allowing users to leverage the power of machine learning for solar energy forecasting.
 
-# THANK YOU 
+## Contact
+
+**MA Rahman**
+
+[LinkedIn](https://www.linkedin.com/in/rahman17309/) | [Email](mailto:rahmandatascience09@gmail.com)
+ 
