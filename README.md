@@ -1,48 +1,95 @@
-# Solar-Power-Prediction
+# ☀️ Solar Power Generation Prediction
 
-![Demo Video](https://waareeimages.s3.ap-south-1.amazonaws.com/Scope_of_Solar_Energy_in_India_8c53c636d2.png)
+![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-Gradient%20Boosting-F7931E?logo=scikitlearn&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Deployed%20with-Streamlit-FF4B4B?logo=streamlit&logoColor=white)
 
-## Demo Video
+Predicting the power output of a solar installation from weather conditions, so an operator can plan grid supply
+and storage ahead of time. The best model (tuned **Gradient Boosting**) explains **~90% of the variance** in power output
+on unseen data, and it's deployed as a **Streamlit** web app.
 
-[Watch the Demo Video](https://youtu.be/sFNEGxjOMiI?si=l29N0xLx2-k_Cp5z)
+🎥 **[Watch the demo video](https://youtu.be/sFNEGxjOMiI?si=l29N0xLx2-k_Cp5z)**
 
-## Project Objective
+---
 
-The objective of this project is to accurately predict solar power generation using historical weather and environmental data. By leveraging machine learning, specifically the Gradient Boosting algorithm, the project aims to provide reliable predictions of the power output from solar panels. This can be used to optimize energy production, plan resource allocation, and support decision-making in solar energy management.
+## 📌 Business problem
 
-## Exploratory Data Analysis (EDA)
-Extensive Exploratory Data Analysis (EDA) was conducted to understand the relationships between various weather parameters and solar power generation. Key steps in the EDA process included:
+Solar output is intermittent: it swings with sun angle, cloud cover, humidity and wind. When a grid operator under-forecasts,
+it pays for backup power it didn't need; when it over-forecasts, it has to buy expensive power at short notice.
+**Goal:** predict power generated (in Joules, per 3-hour period) from weather variables that are available in advance.
 
-- Data Cleaning: Handling missing values and outliers to ensure data quality.
-- Feature Engineering: Creating new features such as average wind speed and pressure over specific periods to enhance model performance.
-- Data Visualization: Utilizing plots and graphs to explore correlations between features like temperature, humidity, wind speed, and power generation.
-  
-These insights helped in selecting the most relevant features for model training and in understanding the underlying patterns in the data.
+## 🗂️ Dataset
 
-## Model Implementation
+`solarpowergeneration.csv`: **2,920 observations** (3-hour periods), 9 weather features plus the target.
 
-The predictive model was built using the Gradient Boosting algorithm, a powerful machine learning technique that combines the predictions of several base estimators to improve accuracy and robustness. The model was trained on historical data, capturing the complex interactions between different weather parameters to predict solar power output.
+| Feature | Description |
+|---|---|
+| `distance-to-solar-noon` | Radians from solar noon (how high the sun is) |
+| `temperature` | Daily average temperature |
+| `wind-direction`, `wind-speed` | Daily averages |
+| `sky-cover` | 0 (clear) – 4 (fully covered) |
+| `visibility`, `humidity` | Daily averages |
+| `average-wind-speed-(period)`, `average-pressure-(period)` | Averages over the 3-hour period |
+| **`power-generated`** | **Target**: energy produced in the period |
 
-## Key aspects of the model implementation include:
+## 🔬 Approach
 
-- Model Training: The Gradient Boosting Regressor was trained on the preprocessed data, optimizing hyperparameters to achieve the best performance.
-- Model Evaluation: The model was evaluated using metrics like Mean Squared Error (MSE) and R-squared (R²) to ensure its accuracy and reliability.
-  
-## Deployment Using Streamlit
+1. **Data cleaning**: missing values and outliers checked and treated.
+2. **EDA**: distributions and correlations. **Distance to solar noon** (r = −0.75) and **humidity** (r = −0.52) have the strongest relationship with output: the further from midday and the more humid, the less power.
+3. **Modelling**: 8 regressors compared (Linear, Ridge, Lasso, Decision Tree, Random Forest, Gradient Boosting, SVR, KNN) on a 70/30 train-test split (2,043 / 877 rows).
+4. **Tuning**: `GridSearchCV` over 243 Gradient Boosting configurations (5-fold CV).
+5. **Validation**: 5-fold cross-validation of the tuned model.
+6. **Deployment**: Streamlit app where a user enters weather inputs and gets a predicted output.
 
-To make the model accessible and easy to use, a web application was developed using Streamlit. The app provides a user-friendly interface where users can input relevant weather data and instantly receive predictions for solar power generation.
+## 📊 Results
 
+| Metric | Value |
+|---|---|
+| Best model | Gradient Boosting Regressor |
+| R² on test set | **0.905** |
+| RMSE on test set | ~3,054 J |
+| 5-fold cross-validated R² | **0.855** (folds: 0.84, 0.77, 0.83, 0.92, 0.91) |
+| Best hyper-parameters | `learning_rate=0.1, max_depth=5, n_estimators=100, min_samples_leaf=4, min_samples_split=10` |
 
-## Key features of the deployment include:
+The cross-validated R² (0.855) is a more honest estimate of real-world performance than the single test split (0.905).
+One fold scores 0.77, so performance varies with the weather pattern in the period.
 
-- Interactive Input Form: Users can enter parameters such as temperature, wind speed, and sky cover.
-- Real-Time Predictions: The model processes the input data and displays the predicted power generation in kilowatts.
-- Visualization: The app includes visual elements to enhance the user experience, such as displaying relevant images and output results.
-- This deployment makes the model practical and accessible, allowing users to leverage the power of machine learning for solar energy forecasting.
+## 🖥️ Run it locally
 
-## Contact
+```bash
+git clone https://github.com/Rahman17309/Solar-Power-Prediction.git
+cd Solar-Power-Prediction
+pip install -r requirements.txt
+jupyter notebook "Solar Panel- Regression project.ipynb"     # analysis & modelling
+streamlit run Deployment/solar_modeldeployment.py              # web app
+```
 
-**MA Rahman**
+## 📁 Repository structure
 
-[LinkedIn](https://www.linkedin.com/in/rahman17309/) | [Email](mailto:rahmandatascience09@gmail.com)
- 
+```
+├── Solar Panel- Regression project.ipynb   # EDA, modelling, tuning, evaluation
+├── solarpowergeneration.csv                 # dataset
+├── Deployment/
+│   ├── solar_modeldeployment.py             # Streamlit app
+│   └── gradient_boosting_model1.pkl         # trained model
+├── Regression Project.pptm                  # project presentation
+├── Solar_power_generation_RD.docx           # requirements document
+└── Solar Demo video.mp4                     # app demo
+```
+
+## 🚧 Limitations & next steps
+
+- Observations are 3-hour periods; a **time-based split** (train on earlier months, test on later) would better reflect forecasting than a random split.
+- Add **weather-forecast** inputs (rather than observed weather) to make it a true day-ahead forecast.
+- Report error in business terms (e.g. % of capacity) and compare against a simple persistence baseline.
+
+## 🧰 Tech stack
+
+Python · pandas · NumPy · scikit-learn · Matplotlib · Seaborn · Streamlit
+
+---
+
+## 👤 Author
+
+**M A Rahman**: Data Analyst · SQL · Python · Power BI · Ex-Amazon
+[LinkedIn](https://www.linkedin.com/in/rahman17309/) · [GitHub](https://github.com/Rahman17309) · [Portfolio](https://rahman17309.github.io/Portfolio.github.io/) · rahmandatascience09@gmail.com
