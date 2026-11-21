@@ -92,4 +92,4 @@ Python · pandas · NumPy · scikit-learn · Matplotlib · Seaborn · Streamlit
 ## 👤 Author
 
 **M A Rahman**: Data Analyst · SQL · Python · Power BI · Ex-Amazon
-[LinkedIn](https://www.linkedin.com/in/rahman17309/) · [GitHub](https://github.com/Rahman17309) · [Portfolio](https://rahman17309.github.io/Portfolio.github.io/) · rahmandatascience09@gmail.com
+[LinkedIn](https://www.linkedin.com/in/rahman17309/) · [GitHub](https://github.com/Rahman17309) · [Portfolio](https://rahman17309.github.io/) · rahmandatascience09@gmail.com
